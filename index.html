@@ -162,6 +162,24 @@ let handlePointer = (pointerX, pointerY) => {
                 matches.forEach(toRM => {
                     blocks[toRM] = undefined;
                 });
+                let x = 0;
+                while (x < gridWidth) {
+                    let y = gridHeight - 2;
+                    while (y > -1) {
+                        let pos = y * gridWidth + x;
+                        let bottom = (y + 1) * gridWidth + x;
+                        if (y < gridHeight - 1 && blocks[pos] !== undefined && blocks[bottom] === undefined) {
+                            blocks[bottom] = blocks[pos];
+                            blocks[bottom].x = x;
+                            blocks[bottom].y = y + 1;
+                            blocks[pos] = undefined;
+                            y = y + 1;
+                        } else {
+                           y = y - 1;
+                        }
+                    }
+                    x = x + 1;
+                }
             }
         }
     }
