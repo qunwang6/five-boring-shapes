@@ -41,7 +41,6 @@ window.addEventListener('resize', onR);
 
 // init
 let u = 48 * window.devicePixelRatio;
-let shapeVisible = true;
 let shapes = [
     time => {
         ctx.rotate(Math.PI / 4);
@@ -80,7 +79,8 @@ while (blocks.length < gridWidth * gridHeight) {
     let oldY = y;
     let startAni = false;
     let endTime = 0;
-    let block = { x, y, oldY, startAni, endTime, shape };
+    let frozen = false;
+    let block = { x, y, oldY, startAni, endTime, shape, frozen };
     blocks.push(block);
 }
 
@@ -115,7 +115,7 @@ let onF = time => {
            w/2 - gridWidth*u/2 + u/2 + block.x*u,
            h/2 - gridHeight*u/2 + u/2 + y*u,
         );
-        ctx.fillStyle = (shapeVisible) ? 'snow' : 'turquoise';
+        ctx.fillStyle = (!block.frozen) ? 'snow' : 'turquoise';
         shapes[block.shape](time);
         ctx.restore();
     });
@@ -136,10 +136,6 @@ canvas.addEventListener('mousedown', e => {
     
     handlePointer(pointerX, pointerY);
 
-    //shapeVisible = !shapeVisible;
-
-    //beep();
-
 });
 
 canvas.addEventListener('touchstart', e => {
@@ -150,10 +146,6 @@ canvas.addEventListener('touchstart', e => {
     let pointerY = e.changedTouches[0].clientY * window.devicePixelRatio;
     
     handlePointer(pointerX, pointerY);
-
-    //shapeVisible = !shapeVisible;
-
-    //beep();
 
 });
 
@@ -170,12 +162,16 @@ let handlePointer = (pointerX, pointerY) => {
         if (blocks[index] !== undefined) {
             let matches = checkConnection(
                 index,
-                blocks[index].shape
+                blocks[index].shape,
+                blocks[index].frozen
             );
             if (matches.length > 1) {
+                beep();
+                // remove connected shapes
                 matches.forEach(toRM => {
                     blocks[toRM] = undefined;
                 });
+                // drop everything down
                 let x = 0;
                 while (x < gridWidth) {
                     let y = gridHeight - 2;
@@ -195,24 +191,50 @@ let handlePointer = (pointerX, pointerY) => {
                     }
                     x = x + 1;
                 }
+                // check needs refill
+                if (!blocks.some((block, index) => block !== undefined && checkConnection(index, block.shape, false).length > 1)) {
+                    blocks = blocks.map(
+                        (block, index) => {
+                            if (block !== undefined) {
+                               block.frozen = true;
+                               return block;
+                            }
+                            let x = index % gridWidth;
+                            let y = index / gridWidth | 0;
+                            let shape = Math.floor(
+                                Math.random() * shapes.length
+                            );
+                            let oldY = y - 2;
+                            let startAni = true;
+                            let endTime = 0;
+                            let frozen = false;
+                            return { x, y, oldY, startAni, endTime, shape, frozen };
+                        }
+                    );
+                }
             }
         }
     }
 };
 
-let checkConnection = (index, shape, matches = []) => {
-    if (blocks[index] === undefined || blocks[index].shape !== shape || matches.indexOf(index) > -1) {
+let checkConnection = (index, shape, frozen, matches = []) => {
+    if (
+        blocks[index] === undefined ||
+        blocks[index].shape !== shape ||
+        blocks[index].frozen !== frozen ||
+        matches.indexOf(index) > -1
+    ) {
         return [];
     }
     matches.push(index);
     matches = matches.concat(
-        checkConnection(index - gridWidth, shape, matches),
-        checkConnection(index + gridWidth, shape, matches));
+        checkConnection(index - gridWidth, shape, frozen, matches),
+        checkConnection(index + gridWidth, shape, frozen, matches));
     if (index % gridWidth !== 0) {
-        matches = matches.concat(checkConnection(index - 1, shape, matches));
+        matches = matches.concat(checkConnection(index - 1, shape, frozen, matches));
     }
     if (index % gridWidth !== gridWidth - 1) {
-        matches = matches.concat(checkConnection(index + 1, shape, matches));
+        matches = matches.concat(checkConnection(index + 1, shape, frozen, matches));
     }
     return matches;
 };
