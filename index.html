@@ -44,9 +44,25 @@ let u = 48 * window.devicePixelRatio;
 let shapeVisible = true;
 let shapes = [
     time => {
-        ctx.rotate(Math.PI * time / 1000);
-        ctx.fillStyle = (shapeVisible) ? 'snow' : 'turquoise';
-        ctx.fillRect(-u / 2, - u / 2, u, u);
+        ctx.rotate(Math.PI / 4);
+        let v = Math.hypot(u / 2, u / 2) - 4 * window.devicePixelRatio;
+        ctx.fillRect(-v / 2, - v / 2, v, v);
+    },
+    time => {
+        let v = u - 8*window.devicePixelRatio;
+        ctx.beginPath();
+        ctx.arc(0, 0, v / 2, 0, 2 * Math.PI);
+        ctx.fill();
+    },
+    time => {
+        let v = u - 8*window.devicePixelRatio;
+        let z = Math.sqrt(v * v - (v/2)*(v/2));
+        ctx.beginPath();
+        ctx.moveTo(-v/2, z/2);
+        ctx.lineTo(v/2, z/2);
+        ctx.lineTo(0, -z/2);
+        ctx.closePath();
+        ctx.fill();
     }
 ];
 
@@ -77,11 +93,15 @@ let onF = time => {
 
     // draw blocks
     blocks.forEach(block => {
+        if (block === undefined) {
+            return;
+        }
         ctx.save();
         ctx.translate(
            w/2 - gridWidth*u/2 + u/2 + block.x*u,
            h/2 - gridHeight*u/2 + u/2 + block.y*u,
         );
+        ctx.fillStyle = (shapeVisible) ? 'snow' : 'turquoise';
         shapes[block.shape](time);
         ctx.restore();
     });
