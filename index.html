@@ -44,26 +44,47 @@ let u = 48 * window.devicePixelRatio;
 let shapeVisible = true;
 let shapes = [
     time => {
-        ctx.translate(w/2, h/2);
         ctx.rotate(Math.PI * time / 1000);
         ctx.fillStyle = (shapeVisible) ? 'snow' : 'turquoise';
         ctx.fillRect(-u / 2, - u / 2, u, u);
     }
 ];
 
+let gridWidth = 6;
+let gridHeight = 6;
+
+let blocks = [];
+
+while (blocks.length < gridWidth * gridHeight) {
+    let x = blocks.length % gridWidth;
+    let y = blocks.length / gridWidth | 0;
+    let shape = Math.floor(
+        Math.random() * shapes.length
+    );
+    let block = { x, y, shape };
+    blocks.push(block);
+}
+
+
 // animation loop
 let onF = time => {
 
-    ctx.save();
-
     // clear canvas
+    ctx.save();
     ctx.fillStyle = 'teal';
-    ctx.fillRect(0, 0, w, h);
-
-    // draw stuff
-    shapes[0](time);
-
+    ctx.fillRect(0, 0, w, h);   
     ctx.restore();
+
+    // draw blocks
+    blocks.forEach(block => {
+        ctx.save();
+        ctx.translate(
+           w/2 - gridWidth*u/2 + u/2 + block.x*u,
+           h/2 - gridHeight*u/2 + u/2 + block.y*u,
+        );
+        shapes[block.shape](time);
+        ctx.restore();
+    });
 
     // request next frame
     requestAnimationFrame(onF);
