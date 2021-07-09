@@ -153,8 +153,35 @@ let handlePointer = (pointerX, pointerY) => {
         return !(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u);
     });
     if (index > -1) {
-        blocks[index] = undefined;
+        if (blocks[index] !== undefined) {
+            let matches = checkConnection(
+                index,
+                blocks[index].shape
+            );
+            if (matches.length > 1) {
+                matches.forEach(toRM => {
+                    blocks[toRM] = undefined;
+                });
+            }
+        }
     }
+};
+
+let checkConnection = (index, shape, matches = []) => {
+    if (blocks[index] === undefined || blocks[index].shape !== shape || matches.indexOf(index) > -1) {
+        return [];
+    }
+    matches.push(index);
+    matches = matches.concat(
+        checkConnection(index - gridWidth, shape, matches),
+        checkConnection(index + gridWidth, shape, matches));
+    if (index % gridWidth !== 0) {
+        matches = matches.concat(checkConnection(index - 1, shape, matches));
+    }
+    if (index % gridWidth !== gridWidth - 1) {
+        matches = matches.concat(checkConnection(index + 1, shape, matches));
+    }
+    return matches;
 };
 
 // music/sound
