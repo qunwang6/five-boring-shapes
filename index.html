@@ -117,12 +117,14 @@ setTimeout(onF, 50, 0);
 
 canvas.addEventListener('mousedown', e => {
 
-    //let pointerX = e.clientX;
-    //let pointerY = e.clientY;
+    let pointerX = e.clientX * window.devicePixelRatio;
+    let pointerY = e.clientY * window.devicePixelRatio;
+    
+    handlePointer(pointerX, pointerY);
 
-    shapeVisible = !shapeVisible;
+    //shapeVisible = !shapeVisible;
 
-    beep();
+    //beep();
 
 });
 
@@ -130,14 +132,30 @@ canvas.addEventListener('touchstart', e => {
 
     e.preventDefault(); // this prevents the mousedown from firing
 
-    //let pointerX = e.changedTouches[0].clientX;
-    //let pointerY = e.changedTouches[0].clientY;
+    let pointerX = e.changedTouches[0].clientX * window.devicePixelRatio;
+    let pointerY = e.changedTouches[0].clientY * window.devicePixelRatio;
+    
+    handlePointer(pointerX, pointerY);
 
-    shapeVisible = !shapeVisible;
+    //shapeVisible = !shapeVisible;
 
-    beep();
+    //beep();
 
 });
+
+let handlePointer = (pointerX, pointerY) => {
+    let index = blocks.findIndex(block => {
+        if (block === undefined) {
+            return false;
+        }
+        let x = w/2 - gridWidth*u/2 + block.x*u;
+        let y = h/2 - gridHeight*u/2 + block.y*u;
+        return !(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u);
+    });
+    if (index > -1) {
+        blocks[index] = undefined;
+    }
+};
 
 // music/sound
 
