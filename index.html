@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Game name</title>
-    <meta name="description" content="A game description">
+    <title>Puzzle 6</title>
+    <meta name="description" content="minimalistic puzzle game">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="teal">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,7 +12,7 @@
     <style>
         html, body { height: 100%; position: relative; overflow: hidden; background: teal; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        canvas { position: relative; display: block; width: 100vw; height: 100vh; }
+        canvas { position: relative; display: block; }
     </style>
 </head>
 <body>
@@ -34,6 +34,8 @@ let onR = e => {
     resizeTOID = setTimeout(_ => {
         canvas.width = w = window.innerWidth * window.devicePixelRatio;
         canvas.height = h = window.innerHeight * window.devicePixelRatio;
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
     }, 40);
 };
 onR();
