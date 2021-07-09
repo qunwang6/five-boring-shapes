@@ -77,7 +77,10 @@ while (blocks.length < gridWidth * gridHeight) {
     let shape = Math.floor(
         Math.random() * shapes.length
     );
-    let block = { x, y, shape };
+    let oldY = y;
+    let startAni = false;
+    let endTime = 0;
+    let block = { x, y, oldY, startAni, endTime, shape };
     blocks.push(block);
 }
 
@@ -97,9 +100,20 @@ let onF = time => {
             return;
         }
         ctx.save();
+        let y = block.y;
+        if (block.startAni) {
+            block.startAni = false;
+            block.endTime = time + 750;
+        }
+        if (block.endTime > time) {
+            y = block.oldY + (block.y - block.oldY) * easeOutBounce(1 + (time - block.endTime) / 750);
+        } else {
+            block.oldY = y;
+        }
+        
         ctx.translate(
            w/2 - gridWidth*u/2 + u/2 + block.x*u,
-           h/2 - gridHeight*u/2 + u/2 + block.y*u,
+           h/2 - gridHeight*u/2 + u/2 + y*u,
         );
         ctx.fillStyle = (shapeVisible) ? 'snow' : 'turquoise';
         shapes[block.shape](time);
@@ -172,6 +186,7 @@ let handlePointer = (pointerX, pointerY) => {
                             blocks[bottom] = blocks[pos];
                             blocks[bottom].x = x;
                             blocks[bottom].y = y + 1;
+                            blocks[bottom].startAni = true;
                             blocks[pos] = undefined;
                             y = y + 1;
                         } else {
@@ -364,6 +379,21 @@ let beep = _ => {
     let loop = false;
     playSong({melody, bpm, loop});
 };
+
+let easeOutBounce = x => {
+    let n1 = 7.5625;
+    let d1 = 2.75;
+
+    if (x < 1 / d1) {
+        return n1 * x * x;
+    } else if (x < 2 / d1) {
+        return n1 * (x -= 1.5 / d1) * x + 0.75;
+    } else if (x < 2.5 / d1) {
+        return n1 * (x -= 2.25 / d1) * x + 0.9375;
+    } else {
+        return n1 * (x -= 2.625 / d1) * x + 0.984375;
+    }
+}
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', e => {
