@@ -168,7 +168,7 @@ let handlePointer = (pointerX, pointerY) => {
                 blocks[index].frozen
             );
             if (matches.length > 1) {
-                beep();
+                beep(blocks[index].shape);
                 // remove connected shapes
                 matches.forEach(toRM => {
                     blocks[toRM] = undefined;
@@ -396,9 +396,11 @@ let shuffleArray = (arr) => {
     return newArr;
 };
 
-let beep = _ => {
+let beep = (tune = 0) => {
     let bpm = 138;
-    let melody = ['2C4'];
+    let tunes = ['2C4', '2e4', '2a3'];
+    let melody = [tunes[tune]];
+    //let melody = ['2C4'];
     //let bass = ['2C2'];
     let loop = false;
     playSong({melody, bpm, loop});
