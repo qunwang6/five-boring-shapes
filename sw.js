@@ -1,4 +1,4 @@
-const PRECACHE = 'game-template';
+const PRECACHE = 'puzzle-6';
 const PRECACHE_URLS = [
     './',
     'index.html'
@@ -40,10 +40,11 @@ self.addEventListener('fetch', event => {
         event.request.mode === 'navigate' ||
         (event.request.method === 'GET' && event.request.headers.get('accept').indexOf('text/html') > -1)
     ) {
-        //console.log('Handling fetch event for', event.request.url)
-        event.respondWith(fetch(createCacheBustedRequest(event.request.url)).catch(error => {
-            //console.log('Fetch failed; returning offline page instead.', error);
-            return caches.match('index.html')
+        event.respondWith(fetch(createCacheBustedRequest(event.request.url)).then(response => {
+            caches.open(PRECACHE).then(cache => cache.put(event.request.url, response.clone()));
+            return response.clone();
+        }).catch(error => {
+            return caches.match(event.request.url);
         }));
     }
 });
