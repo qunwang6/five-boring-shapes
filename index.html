@@ -162,7 +162,7 @@ let handlePointer = (pointerX, pointerY) => {
     });
     if (index > -1) {
         if (blocks[index] !== undefined) {
-            let matches = checkConnection(
+            let matches = checkBlock(
                 index,
                 blocks[index].shape,
                 blocks[index].frozen
@@ -194,7 +194,7 @@ let handlePointer = (pointerX, pointerY) => {
                     x = x + 1;
                 }
                 // check needs refill
-                if (!blocks.some((block, index) => block !== undefined && checkConnection(index, block.shape, false).length > 1)) {
+                if (!blocks.some((block, index) => block !== undefined && checkBlock(index, block.shape, false).length > 1)) {
                     blocks = blocks.map(
                         (block, index) => {
                             if (block !== undefined) {
@@ -219,27 +219,31 @@ let handlePointer = (pointerX, pointerY) => {
     }
 };
 
-let checkConnection = (index, shape, frozen, matches = []) => {
-    if (
-        blocks[index] === undefined ||
-        blocks[index].shape !== shape ||
-        blocks[index].frozen !== frozen ||
-        matches.indexOf(index) > -1
-    ) {
-        return [];
-    }
-    matches.push(index);
-    matches = matches.concat(
-        checkConnection(index - gridWidth, shape, frozen, matches),
-        checkConnection(index + gridWidth, shape, frozen, matches));
-    if (index % gridWidth !== 0) {
-        matches = matches.concat(checkConnection(index - 1, shape, frozen, matches));
-    }
-    if (index % gridWidth !== gridWidth - 1) {
-        matches = matches.concat(checkConnection(index + 1, shape, frozen, matches));
-    }
+let checkBlock = (index, shape, frozen) => {
+    let matches = [];
+    let checkConnection = (index, shape, frozen) => {
+        if (
+            blocks[index] === undefined ||
+            blocks[index].shape !== shape ||
+            blocks[index].frozen !== frozen ||
+            matches.indexOf(index) > -1
+        ) {
+            return;
+        }
+        matches.push(index);
+        checkConnection(index - gridWidth, shape, frozen),
+        checkConnection(index + gridWidth, shape, frozen);
+        if (index % gridWidth !== 0) {
+            checkConnection(index - 1, shape, frozen);
+        }
+        if (index % gridWidth !== gridWidth - 1) {
+            checkConnection(index + 1, shape, frozen);
+        }
+    };
+    checkConnection(index, shape, frozen);
     return matches;
 };
+
 
 // music/sound
 
