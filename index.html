@@ -64,6 +64,19 @@ let shapes = [
         ctx.lineTo(0, -z/2);
         ctx.closePath();
         ctx.fill();
+    },
+    time => {
+        let v = u - 8*window.devicePixelRatio;
+        let size = v / 2;
+        ctx.beginPath();
+        ctx.moveTo(size * Math.cos(0), size * Math.sin(0));
+        for (let side = 0; side < 7; side++) {
+            ctx.lineTo(
+                size * Math.cos(side * 2 * Math.PI / 6),
+                size * Math.sin(side * 2 * Math.PI / 6)
+            );
+        }
+        ctx.fill();
     }
 ];
 
@@ -72,19 +85,25 @@ let gridHeight = 6;
 
 let blocks = [];
 
-while (blocks.length < gridWidth * gridHeight) {
-    let x = blocks.length % gridWidth;
-    let y = blocks.length / gridWidth | 0;
-    let shape = Math.floor(
-        Math.random() * shapes.length
-    );
-    let oldY = y;
-    let startAni = false;
-    let endTime = 0;
-    let frozen = false;
-    let block = { x, y, oldY, startAni, endTime, shape, frozen };
-    blocks.push(block);
-}
+let resetBlocks = _ => {
+
+    blocks = [];
+
+    while (blocks.length < gridWidth * gridHeight) {
+        let x = blocks.length % gridWidth;
+        let y = blocks.length / gridWidth | 0;
+        let shape = Math.floor(
+            Math.random() * shapes.length
+        );
+        let oldY = y;
+        let startAni = false;
+        let endTime = 0;
+        let frozen = false;
+        let block = { x, y, oldY, startAni, endTime, shape, frozen };
+        blocks.push(block);
+    }
+};
+resetBlocks();
 
 
 // animation loop
@@ -213,6 +232,11 @@ let handlePointer = (pointerX, pointerY) => {
                             return { x, y, oldY, startAni, endTime, shape, frozen };
                         }
                     );
+                }
+                // check game over
+                if (!blocks.some((block, index) => block === undefined || checkBlock(index, block.shape, block.frozen).length > 1)) {
+                    alert("game over");
+                    resetBlocks();
                 }
             }
         }
@@ -402,7 +426,7 @@ let shuffleArray = (arr) => {
 
 let beep = (tune = 0) => {
     let bpm = 138;
-    let tunes = ['2C4', '2e4', '2a3'];
+    let tunes = ['2C4', '2e4', '2a4', '2G4'];
     let melody = [tunes[tune]];
     //let melody = ['2C4'];
     //let bass = ['2C2'];
