@@ -3,8 +3,8 @@
   "short_name": "Puzzle 6",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "teal",
-  "theme_color": "teal",
+  "background_color": "#5C9996",
+  "theme_color": "#5C9996",
   "scope": "./",
   "description": "Minimalistic puzzle game",
   "icons": [

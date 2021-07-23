@@ -5,12 +5,12 @@
     <title>Puzzle 6</title>
     <meta name="description" content="minimalistic puzzle game">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="teal">
+    <meta name="theme-color" content="#5C9996">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        html, body { height: 100%; position: relative; overflow: hidden; background: teal; }
+        html, body { height: 100%; position: relative; overflow: hidden; background: #5C9996; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         canvas { position: relative; display: block; }
     </style>
@@ -111,8 +111,8 @@ let onF = time => {
 
     // clear canvas
     ctx.save();
-    ctx.fillStyle = 'teal';
-    ctx.fillRect(0, 0, w, h);   
+    ctx.fillStyle = '#5C9996';
+    ctx.fillRect(0, 0, w, h);
     ctx.restore();
 
     // draw blocks
@@ -131,12 +131,12 @@ let onF = time => {
         } else {
             block.oldY = y;
         }
-        
+
         ctx.translate(
            w/2 - gridWidth*u/2 + u/2 + block.x*u,
            h/2 - gridHeight*u/2 + u/2 + y*u,
         );
-        ctx.fillStyle = (!block.frozen) ? 'snow' : 'turquoise';
+        ctx.fillStyle = (block.frozen) ? '#9AC1C0' : '#F4ECD6';
         shapes[block.shape](time);
         ctx.restore();
     });
@@ -154,7 +154,7 @@ canvas.addEventListener('mousedown', e => {
 
     let pointerX = e.clientX * window.devicePixelRatio;
     let pointerY = e.clientY * window.devicePixelRatio;
-    
+
     handlePointer(pointerX, pointerY);
 
 });
@@ -165,7 +165,7 @@ canvas.addEventListener('touchstart', e => {
 
     let pointerX = e.changedTouches[0].clientX * window.devicePixelRatio;
     let pointerY = e.changedTouches[0].clientY * window.devicePixelRatio;
-    
+
     handlePointer(pointerX, pointerY);
 
 });
