@@ -77,6 +77,19 @@ let shapes = [
             );
         }
         ctx.fill();
+    },
+    time => {
+        let v = u - 8*window.devicePixelRatio;
+        let size = v / 2;
+        ctx.beginPath();
+        ctx.moveTo(size * Math.cos(- Math.PI / 2), size * Math.sin(- Math.PI / 2));
+        for (let side = 0; side < 6; side++) {
+            ctx.lineTo(
+                size * Math.cos(side * 2 * Math.PI / 5 - Math.PI / 2),
+                size * Math.sin(side * 2 * Math.PI / 5 - Math.PI / 2)
+            );
+        }
+        ctx.fill();
     }
 ];
 
@@ -236,7 +249,7 @@ let handlePointer = (pointerX, pointerY) => {
                 // check game over
                 if (!blocks.some((block, index) => block === undefined || checkBlock(index, block.shape, block.frozen).length > 1)) {
                     alert("game over");
-                    resetBlocks();
+                    //resetBlocks();
                 }
             }
         }
@@ -426,7 +439,7 @@ let shuffleArray = (arr) => {
 
 let beep = (tune = 0) => {
     let bpm = 138;
-    let tunes = ['2C4', '2e4', '2a4', '2G4'];
+    let tunes = ['2C4', '2e4', '2a4', '2G4', '2B4'];
     let melody = [tunes[tune]];
     //let melody = ['2C4'];
     //let bass = ['2C2'];
