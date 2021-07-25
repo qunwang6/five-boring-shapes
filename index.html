@@ -101,13 +101,19 @@ let blocks = [];
 let resetBlocks = _ => {
 
     blocks = [];
+    
+    let shape = Math.floor(
+        Math.random() * shapes.length
+    );
 
     while (blocks.length < gridWidth * gridHeight) {
         let x = blocks.length % gridWidth;
         let y = blocks.length / gridWidth | 0;
-        let shape = Math.floor(
-            Math.random() * shapes.length
-        );
+        if (Math.random() > .5) {
+            shape = Math.floor(
+                Math.random() * shapes.length
+            );
+        }      
         let oldY = y;
         let startAni = false;
         let endTime = 0;
@@ -183,7 +189,14 @@ canvas.addEventListener('touchstart', e => {
 
 });
 
+let gameover = false;
+
 let handlePointer = (pointerX, pointerY) => {
+    if (gameover) {
+        gameover = false;
+        resetBlocks();
+        return;
+    }
     let index = blocks.findIndex(block => {
         if (block === undefined) {
             return false;
@@ -227,6 +240,25 @@ let handlePointer = (pointerX, pointerY) => {
                 }
                 // check needs refill
                 if (!blocks.some((block, index) => block !== undefined && checkBlock(index, block.shape, false).length > 1)) {
+                    // freez leftovers
+                    blocks = blocks.map(
+                        (block, index) => {
+                            if (block !== undefined) {
+                               block.frozen = true;
+                            }
+                            return block;
+                    });
+                    // check game over
+                    if (blocks.some((block, index) => block !== undefined && block.frozen && index < gridWidth)) {
+                        if (blocks.some((block, index) => block !== undefined && checkBlock(index, block.shape, block.frozen).length > 1)) {
+                            return;
+                        }
+                        gameover = true;
+                        alert("game over");
+                        
+                        //resetBlocks();
+                        return;
+                    }
                     let newShape = Math.floor(
                         Math.random() * shapes.length
                     );
@@ -240,9 +272,14 @@ let handlePointer = (pointerX, pointerY) => {
                             let x = index % gridWidth;
                             let y = index / gridWidth | 0;
                             let shape = newShape;
-                            newShape = Math.floor(
-                                Math.random() * shapes.length
-                            );
+                            if (x !== gridWidth - 1) {
+                                if (blocks[index + 1] !== undefined && blocks[index + 1].frozen) {
+                                    shape = blocks[index + 1].shape;
+                                }
+                            }
+                            if (blocks[index - 1] !== undefined && blocks[index - 1].frozen || Math.random() > .5) {
+                                newShape = (shape + 1) % shapes.length;
+                            }
                             let oldY = y - 2;
                             let startAni = true;
                             let endTime = 0;
@@ -252,7 +289,8 @@ let handlePointer = (pointerX, pointerY) => {
                     );
                 }
                 // check game over
-                if (!blocks.some((block, index) => block === undefined || checkBlock(index, block.shape, block.frozen).length > 1)) {
+                //if (!blocks.some((block, index) => block === undefined || checkBlock(index, block.shape, block.frozen).length > 1)) {
+                if (blocks.some((block, index) => block !== undefined && block.frozen && index < gridWidth)) {
                     alert("game over");
                     //resetBlocks();
                 }
