@@ -194,7 +194,7 @@ canvas.addEventListener('mousedown', e => {
 
 canvas.addEventListener('touchstart', e => {
 
-    e.preventDefault(); // this prevents the mousedown from firing
+    e.preventDefault(); // this prevents mousedown from firing
 
     let pointerX = e.changedTouches[0].clientX * window.devicePixelRatio;
     let pointerY = e.changedTouches[0].clientY * window.devicePixelRatio;
@@ -254,7 +254,7 @@ let handlePointer = (pointerX, pointerY) => {
                 }
                 // check needs refill
                 if (!blocks.some((block, index) => block !== undefined && checkBlock(index, block.shape, false).length > 1)) {
-                    // freez leftovers
+                    // freeze leftovers
                     blocks = blocks.map(
                         (block, index) => {
                             if (block !== undefined) {
@@ -268,8 +268,6 @@ let handlePointer = (pointerX, pointerY) => {
                             return;
                         }
                         gameover = true;
-                        //alert("game over");
-                        //resetBlocks();
                         return;
                     }
                     let newShape = Math.floor(
@@ -300,12 +298,6 @@ let handlePointer = (pointerX, pointerY) => {
                             return { x, y, oldY, startAni, endTime, shape, frozen };
                         }
                     );
-                }
-                // check game over
-                //if (!blocks.some((block, index) => block === undefined || checkBlock(index, block.shape, block.frozen).length > 1)) {
-                if (blocks.some((block, index) => block !== undefined && block.frozen && index < gridWidth)) {
-                    alert("game over");
-                    //resetBlocks();
                 }
             }
         }
