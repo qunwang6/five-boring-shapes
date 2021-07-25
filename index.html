@@ -227,15 +227,20 @@ let handlePointer = (pointerX, pointerY) => {
                 }
                 // check needs refill
                 if (!blocks.some((block, index) => block !== undefined && checkBlock(index, block.shape, false).length > 1)) {
+                    let newShape = Math.floor(
+                        Math.random() * shapes.length
+                    );
                     blocks = blocks.map(
                         (block, index) => {
                             if (block !== undefined) {
                                block.frozen = true;
+                               newShape = block.shape;
                                return block;
                             }
                             let x = index % gridWidth;
                             let y = index / gridWidth | 0;
-                            let shape = Math.floor(
+                            let shape = newShape;
+                            newShape = Math.floor(
                                 Math.random() * shapes.length
                             );
                             let oldY = y - 2;
