@@ -159,6 +159,20 @@ let onF = time => {
         shapes[block.shape](time);
         ctx.restore();
     });
+    
+    if (gameover) {
+        ctx.save();    
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillStyle = '#F4ECD6';
+        let fontSize = 32 * window.devicePixelRatio;
+        ctx.font = fontSize + 'px monospace';      
+        ctx.fillText('GAME OVER', w / 2, (h - u) / 2);
+        fontSize = 16 * window.devicePixelRatio;
+        ctx.font = fontSize + 'px monospace';      
+        ctx.fillText('tap to restart', w / 2, (h + u) / 2);
+        ctx.restore();
+    }
 
     // request next frame
     requestAnimationFrame(onF);
@@ -254,8 +268,7 @@ let handlePointer = (pointerX, pointerY) => {
                             return;
                         }
                         gameover = true;
-                        alert("game over");
-                        
+                        //alert("game over");
                         //resetBlocks();
                         return;
                     }
