@@ -18,6 +18,9 @@
 <body>
 <script>
 
+let score = Number(localStorage.getItem('puzzle-6-score'));
+let hiscore = Number(localStorage.getItem('puzzle-6-hiscore'));
+
 let canvas = document.createElement('canvas');
 document.body.appendChild(canvas);
 
@@ -97,6 +100,11 @@ let gridWidth = 6;
 let gridHeight = 6;
 
 let blocks = [];
+let blocksData = localStorage.getItem('puzzle-6-blocks');
+if (blocksData !== null) {
+    blocks = JSON.parse(blocksData);
+    blocks = blocks.map(block => (block === null) ? undefined : block);
+}
 
 let resetBlocks = _ => {
 
@@ -121,8 +129,18 @@ let resetBlocks = _ => {
         let block = { x, y, oldY, startAni, endTime, shape, frozen };
         blocks.push(block);
     }
+    localStorage.setItem('puzzle-6-blocks', JSON.stringify(blocks));
+    if (score > hiscore) {
+        hiscore = score;
+        localStorage.setItem('puzzle-6-hiscore', hiscore);
+    }
+    score = 0;
+    localStorage.setItem('puzzle-6-score', score);
 };
-resetBlocks();
+
+if (blocks.length === 0) {
+    resetBlocks();
+}
 
 
 // animation loop
@@ -160,20 +178,24 @@ let onF = time => {
         ctx.restore();
     });
     
+    ctx.save();    
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = '#F4ECD6';
+    let fontSize = 12 * window.devicePixelRatio;
+    ctx.font = fontSize + 'px monospace';      
+    ctx.fillText('Hiscore: ' + hiscore, 4 * window.devicePixelRatio, 4 * window.devicePixelRatio);
+    ctx.fillText('Score: ' + score, 4 * window.devicePixelRatio, 20 * window.devicePixelRatio);
     if (gameover) {
-        ctx.save();    
         ctx.textAlign = 'center';
-        ctx.textBaseline = 'top';
-        ctx.fillStyle = '#F4ECD6';
-        let fontSize = 32 * window.devicePixelRatio;
+        fontSize = 32 * window.devicePixelRatio;
         ctx.font = fontSize + 'px monospace';      
         ctx.fillText('GAME OVER', w / 2, (h - u) / 2);
         fontSize = 16 * window.devicePixelRatio;
         ctx.font = fontSize + 'px monospace';      
         ctx.fillText('tap to restart', w / 2, (h + u) / 2);
-        ctx.restore();
     }
-
+    ctx.restore();
     // request next frame
     requestAnimationFrame(onF);
 };
@@ -227,6 +249,8 @@ let handlePointer = (pointerX, pointerY) => {
                 blocks[index].frozen
             );
             if (matches.length > 1) {
+                score = score + matches.length * matches.length;
+                localStorage.setItem('puzzle-6-score', score);
                 beep(blocks[index].shape);
                 // remove connected shapes
                 matches.forEach(toRM => {
@@ -265,9 +289,11 @@ let handlePointer = (pointerX, pointerY) => {
                     // check game over
                     if (blocks.some((block, index) => block !== undefined && block.frozen && index < gridWidth)) {
                         if (blocks.some((block, index) => block !== undefined && checkBlock(index, block.shape, block.frozen).length > 1)) {
+                            localStorage.setItem('puzzle-6-blocks', JSON.stringify(blocks));
                             return;
                         }
                         gameover = true;
+                        localStorage.setItem('puzzle-6-blocks', JSON.stringify([]));
                         return;
                     }
                     let newShape = Math.floor(
@@ -299,6 +325,7 @@ let handlePointer = (pointerX, pointerY) => {
                         }
                     );
                 }
+                localStorage.setItem('puzzle-6-blocks', JSON.stringify(blocks));
             }
         }
     }
