@@ -250,12 +250,18 @@ let handlePointer = (pointerX, pointerY) => {
         resetBlocks();
         return;
     }
+    let x = 0;
+    let y = h - u;
+    if (!(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u)) {
+        muted = !muted;
+        return;
+    }
     let index = blocks.findIndex(block => {
         if (block === undefined) {
             return false;
         }
-        let x = w/2 - gridWidth*u/2 + block.x*u;
-        let y = h/2 - gridHeight*u/2 + block.y*u;
+        x = w/2 - gridWidth*u/2 + block.x*u;
+        y = h/2 - gridHeight*u/2 + block.y*u;
         return !(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u);
     });
     if (index > -1) {
@@ -377,6 +383,10 @@ let checkBlock = (index, shape, frozen) => {
 // music/sound
 
 let playSong = (options = {}) => {
+
+    if (muted) {
+        return;
+    }
 
     let notes = 'AbBCdDeEFgGa';
 
