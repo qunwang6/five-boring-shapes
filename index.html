@@ -275,7 +275,7 @@ let handlePointer = (pointerX, pointerY) => {
             if (matches.length > 1) {
                 score = score + matches.length * matches.length;
                 localStorage.setItem('puzzle-6-score', score);
-                beep(blocks[index].shape);
+                let tone = blocks[index].shape;
                 // remove connected shapes
                 matches.forEach(toRM => {
                     blocks[toRM] = undefined;
@@ -353,6 +353,7 @@ let handlePointer = (pointerX, pointerY) => {
                         }
                     );
                 }
+                beep(tone);
                 localStorage.setItem('puzzle-6-blocks', JSON.stringify(blocks));
             }
         }
