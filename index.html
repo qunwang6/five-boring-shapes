@@ -29,8 +29,8 @@ let ctx = canvas.getContext('2d');
 //console.log(ctx);
 
 // resize canvas with window
-let w;
-let h;
+let w = 320;
+let h = 320;
 let resizeTOID = 0;
 let onR = e => {
     clearTimeout(resizeTOID);
@@ -53,13 +53,13 @@ let shapes = [
         ctx.fillRect(-v / 2, - v / 2, v, v);
     },
     time => {
-        let v = u - 8*window.devicePixelRatio;
+        let v = u - 8 * window.devicePixelRatio;
         ctx.beginPath();
         ctx.arc(0, 0, v / 2, 0, 2 * Math.PI);
         ctx.fill();
     },
     time => {
-        let v = u - 8*window.devicePixelRatio;
+        let v = u - 8 * window.devicePixelRatio;
         let z = Math.sqrt(v * v - (v/2)*(v/2));
         ctx.beginPath();
         ctx.moveTo(-v/2, z/2);
@@ -69,7 +69,7 @@ let shapes = [
         ctx.fill();
     },
     time => {
-        let v = u - 8*window.devicePixelRatio;
+        let v = u - 8 * window.devicePixelRatio;
         let size = v / 2;
         ctx.beginPath();
         ctx.moveTo(size * Math.cos(0), size * Math.sin(0));
@@ -82,7 +82,7 @@ let shapes = [
         ctx.fill();
     },
     time => {
-        let v = u - 8*window.devicePixelRatio;
+        let v = u - 8 * window.devicePixelRatio;
         let size = v / 2;
         ctx.beginPath();
         ctx.moveTo(size * Math.cos(- Math.PI / 2), size * Math.sin(- Math.PI / 2));
@@ -109,7 +109,7 @@ if (blocksData !== null) {
 let resetBlocks = _ => {
 
     blocks = [];
-    
+
     let shape = Math.floor(
         Math.random() * shapes.length
     );
@@ -121,7 +121,7 @@ let resetBlocks = _ => {
             shape = Math.floor(
                 Math.random() * shapes.length
             );
-        }      
+        }
         let oldY = y;
         let startAni = false;
         let endTime = 0;
@@ -177,22 +177,22 @@ let onF = time => {
         shapes[block.shape](time);
         ctx.restore();
     });
-    
-    ctx.save();    
+
+    ctx.save();
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
     ctx.fillStyle = '#F4ECD6';
     let fontSize = 12 * window.devicePixelRatio;
-    ctx.font = fontSize + 'px monospace';      
+    ctx.font = fontSize + 'px monospace';
     ctx.fillText('Hiscore: ' + hiscore, 4 * window.devicePixelRatio, 4 * window.devicePixelRatio);
     ctx.fillText('Score: ' + score, 4 * window.devicePixelRatio, 20 * window.devicePixelRatio);
     if (gameover) {
         ctx.textAlign = 'center';
         fontSize = 32 * window.devicePixelRatio;
-        ctx.font = fontSize + 'px monospace';      
+        ctx.font = fontSize + 'px monospace';
         ctx.fillText('GAME OVER', w / 2, (h - u) / 2);
         fontSize = 16 * window.devicePixelRatio;
-        ctx.font = fontSize + 'px monospace';      
+        ctx.font = fontSize + 'px monospace';
         ctx.fillText('tap to restart', w / 2, (h + u) / 2);
     }
     ctx.restore();
