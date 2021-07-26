@@ -254,6 +254,7 @@ let handlePointer = (pointerX, pointerY) => {
     let y = h - u;
     if (!(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u)) {
         muted = !muted;
+        beep();
         return;
     }
     let index = blocks.findIndex(block => {
@@ -315,6 +316,10 @@ let handlePointer = (pointerX, pointerY) => {
                             localStorage.setItem('puzzle-6-blocks', JSON.stringify(blocks));
                             return;
                         }
+                        let bpm = 138;
+                        let melody = ['2a4', '2G4', '4e4', '8C4', '16B4', '16_'];
+                        let loop = false;
+                        playSong({melody, bpm, loop});
                         gameover = true;
                         localStorage.setItem('puzzle-6-blocks', JSON.stringify([]));
                         return;
@@ -486,7 +491,7 @@ let playSong = (options = {}) => {
                 nextNote = 0;
                 nextPluck = 0;
                 nextNoteTick = nextPluckTick = ctx.currentTime;
-            } else {
+            } else if (ctx.currentTime > anticipate * 2) {
                 ctx.close();
             }
         }
@@ -543,8 +548,6 @@ let beep = (tune = 0) => {
     let bpm = 138;
     let tunes = ['2C4', '2e4', '2a4', '2G4', '2B4'];
     let melody = [tunes[tune]];
-    //let melody = ['2C4'];
-    //let bass = ['2C2'];
     let loop = false;
     playSong({melody, bpm, loop});
 };
