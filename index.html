@@ -314,6 +314,10 @@ let handlePointer = (pointerX, pointerY) => {
                     if (blocks.some((block, index) => block !== undefined && block.frozen && index < gridWidth)) {
                         if (blocks.some((block, index) => block !== undefined && checkBlock(index, block.shape, block.frozen).length > 1)) {
                             localStorage.setItem('puzzle-6-blocks', JSON.stringify(blocks));
+                            let bpm = 138;
+                            let melody = ['2G4', '2a4'];
+                            let loop = false;
+                            playSong({melody, bpm, loop});
                             return;
                         }
                         let bpm = 138;
