@@ -258,11 +258,6 @@ canvas.addEventListener('touchstart', e => {
 let gameover = false;
 
 let handlePointer = (pointerX, pointerY) => {
-    if (gameover) {
-        gameover = false;
-        resetBlocks();
-        return;
-    }
     let x = 0;
     let y = h - u;
     if (!(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u)) {
@@ -276,6 +271,11 @@ let handlePointer = (pointerX, pointerY) => {
     if (!(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u)) {
         muted = !muted;
         beep();
+        return;
+    }
+    if (gameover) {
+        gameover = false;
+        resetBlocks();
         return;
     }
     let index = blocks.findIndex(block => {
