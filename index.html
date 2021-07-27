@@ -48,14 +48,6 @@ window.addEventListener('resize', onR);
 let u = 48 * window.devicePixelRatio;
 let shapes = [
     time => {
-        ctx.rotate(Math.PI / 4);
-        let v = Math.hypot(u / 2, u / 2) - 4 * window.devicePixelRatio;
-        ctx.fillRect(-v / 2, - v / 2, v, v);
-        ctx.fillStyle = '#5C9996';
-        v = v / 2;
-        ctx.fillRect(-v / 2, - v / 2, v, v);
-    },
-    time => {
         let v = u - 8 * window.devicePixelRatio;
         ctx.beginPath();
         ctx.arc(0, 0, v / 2, 0, 2 * Math.PI);
@@ -69,6 +61,27 @@ let shapes = [
         ctx.lineTo(v/2, z/2);
         ctx.lineTo(0, -z/2);
         ctx.closePath();
+        ctx.fill();
+    },
+    time => {
+        ctx.rotate(Math.PI / 4);
+        let v = Math.hypot(u / 2, u / 2) - 4 * window.devicePixelRatio;
+        ctx.fillRect(-v / 2, - v / 2, v, v);
+        ctx.fillStyle = '#5C9996';
+        v = v / 2;
+        ctx.fillRect(-v / 2, - v / 2, v, v);
+    },
+    time => {
+        let v = u - 8 * window.devicePixelRatio;
+        let size = v / 2;
+        ctx.beginPath();
+        ctx.moveTo(size * Math.cos(- Math.PI / 2), size * Math.sin(- Math.PI / 2));
+        for (let side = 0; side < 5; side++) {
+            ctx.lineTo(
+                size * Math.cos(side * 2 * Math.PI / 5 - Math.PI / 2),
+                size * Math.sin(side * 2 * Math.PI / 5 - Math.PI / 2)
+            );
+        }
         ctx.fill();
     },
     time => {
@@ -91,19 +104,6 @@ let shapes = [
             ctx.lineTo(
                 size * Math.cos(side * 2 * Math.PI / 6),
                 size * Math.sin(side * 2 * Math.PI / 6)
-            );
-        }
-        ctx.fill();
-    },
-    time => {
-        let v = u - 8 * window.devicePixelRatio;
-        let size = v / 2;
-        ctx.beginPath();
-        ctx.moveTo(size * Math.cos(- Math.PI / 2), size * Math.sin(- Math.PI / 2));
-        for (let side = 0; side < 5; side++) {
-            ctx.lineTo(
-                size * Math.cos(side * 2 * Math.PI / 5 - Math.PI / 2),
-                size * Math.sin(side * 2 * Math.PI / 5 - Math.PI / 2)
             );
         }
         ctx.fill();
@@ -215,14 +215,14 @@ let onF = time => {
     ctx.restore();
     // soundbutton
     ctx.save();
-    let svgPath = 'M21.44 12.44L15.878 18H9.5A1.5 1.5 0 008 19.5v9A1.5 1.5 0 009.5 30h6.379l5.56 5.56c.94.939 2.561.279 2.561-1.061V13.5c0-1.341-1.623-1.998-2.56-1.06zM38 24c0-3.97-2.004-7.621-5.36-9.765a1.494 1.494 0 00-2.07.466 1.517 1.517 0 00.463 2.085A8.53 8.53 0 0135 24a8.53 8.53 0 01-3.967 7.214c-.7.446-.907 1.38-.464 2.085.407.647 1.32.946 2.07.466A11.54 11.54 0 0038 24zm-8.86-4.805a1.506 1.506 0 00-2.039.591c-.399.726-.135 1.638.591 2.039A2.493 2.493 0 0129 24c0 .899-.501 1.733-1.307 2.175a1.502 1.502 0 001.447 2.63A5.496 5.496 0 0032 23.999a5.493 5.493 0 00-2.86-4.804z';
+    let svgPath = 'M26.56 12.44L32.122 18H38.5a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5h-6.379l-5.56 5.56c-.94.939-2.561.279-2.561-1.061V13.5c0-1.341 1.623-1.998 2.56-1.06zM10 24c0-3.97 2.004-7.621 5.36-9.765a1.494 1.494 0 012.07.466 1.517 1.517 0 01-.463 2.085A8.53 8.53 0 0013 24a8.53 8.53 0 003.967 7.214c.7.446.907 1.38.464 2.085-.407.647-1.32.946-2.07.466A11.54 11.54 0 0110 24zm8.86-4.805a1.506 1.506 0 012.039.591c.399.726.135 1.638-.591 2.039A2.493 2.493 0 0019 24c0 .899.501 1.733 1.307 2.175a1.502 1.502 0 01-1.447 2.63A5.496 5.496 0 0116 23.999a5.493 5.493 0 012.86-4.804z';
     if (muted) {
-        svgPath = 'M21.44 12.44L15.878 18H9.5A1.5 1.5 0 008 19.5v9A1.5 1.5 0 009.5 30h6.379l5.56 5.56c.94.939 2.561.279 2.561-1.061V13.5c0-1.341-1.623-1.998-2.56-1.06zM36.852 24l2.852-2.853a1.01 1.01 0 000-1.426l-1.426-1.426a1.008 1.008 0 00-1.426 0L34 21.147l-2.853-2.852a1.008 1.008 0 00-1.426 0l-1.426 1.426a1.008 1.008 0 000 1.426L31.147 24l-2.852 2.852a1.01 1.01 0 000 1.426l1.427 1.427a1.01 1.01 0 001.426 0L34 26.853l2.853 2.852a1.01 1.01 0 001.426 0l1.426-1.426a1.01 1.01 0 000-1.426L36.853 24z';
+        svgPath = 'M26.56 12.44L32.122 18H38.5a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5h-6.379l-5.56 5.56c-.94.939-2.561.279-2.561-1.061V13.5c0-1.341 1.623-1.998 2.56-1.06zM11.148 24l-2.852-2.853a1.01 1.01 0 010-1.426l1.426-1.426a1.008 1.008 0 011.426 0L14 21.147l2.853-2.852a1.008 1.008 0 011.426 0l1.426 1.426a1.008 1.008 0 010 1.426L16.853 24l2.852 2.852a1.01 1.01 0 010 1.426l-1.427 1.427a1.01 1.01 0 01-1.426 0L14 26.853l-2.853 2.852a1.01 1.01 0 01-1.426 0L8.295 28.28a1.01 1.01 0 010-1.426L11.147 24z';
     }
     let p = new Path2D(svgPath);
-    ctx.translate(0, h);
+    ctx.translate(w, 0);
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    ctx.translate(0, -48);
+    ctx.translate(-48, 0);
     ctx.fillStyle = '#F4ECD6';
     ctx.fill(p);
     ctx.restore();
@@ -266,6 +266,14 @@ let handlePointer = (pointerX, pointerY) => {
     }
     let x = 0;
     let y = h - u;
+    if (!(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u)) {
+        //muted = !muted;
+        //beep();
+        console.log('click bottom left');
+        return;
+    }
+    x = w - u;
+    y = 0;
     if (!(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u)) {
         muted = !muted;
         beep();
@@ -565,7 +573,7 @@ let shuffleArray = (arr) => {
 
 let beep = (tune = 0) => {
     let bpm = 138;
-    let tunes = ['2C4', '2e4', '2a4', '2G4', '2B4'];
+    let tunes = ['2B4', '2C4', '2e4', '2G4', '2a4'];
     let melody = [tunes[tune]];
     let loop = false;
     playSong({melody, bpm, loop});
