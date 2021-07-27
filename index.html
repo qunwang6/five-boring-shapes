@@ -200,8 +200,7 @@ let onF = time => {
     ctx.fillStyle = '#F4ECD6';
     let fontSize = 16 * window.devicePixelRatio;
     ctx.font = fontSize + 'px monospace';
-    ctx.fillText('Hiscore: ' + hiscore, 8 * window.devicePixelRatio, 8 * window.devicePixelRatio);
-    ctx.fillText('Score: ' + score, 8 * window.devicePixelRatio, 32 * window.devicePixelRatio);
+    ctx.fillText(hiscore + ' | ' + score, fontSize, fontSize);
     if (gameover) {
         // game over text
         ctx.textAlign = 'center';
