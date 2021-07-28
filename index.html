@@ -20,6 +20,7 @@
 
 let score = Number(localStorage.getItem('puzzle-6-score'));
 let hiscore = Number(localStorage.getItem('puzzle-6-hiscore'));
+let sep = ' | ';
 
 let canvas = document.createElement('canvas');
 document.body.appendChild(canvas);
@@ -200,7 +201,7 @@ let onF = time => {
     ctx.fillStyle = '#F4ECD6';
     let fontSize = 16 * window.devicePixelRatio;
     ctx.font = fontSize + 'px monospace';
-    ctx.fillText(hiscore + ' | ' + score, fontSize, fontSize);
+    ctx.fillText(hiscore + sep + score, fontSize, fontSize);
     if (gameover) {
         // game over text
         ctx.textAlign = 'center';
@@ -289,8 +290,13 @@ let handlePointer = (pointerX, pointerY) => {
         x = w - u;
         y = h - u;
         if (!(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u)) {
-            deferredPrompt.prompt();
-            deferredPrompt = undefined;
+            let install = async () => {
+                deferredPrompt.prompt();
+                let { outcome } = await deferredPrompt.userChoice;
+                sep = outcome;
+                deferredPrompt = undefined;
+            }
+            install();
             return;
         }
     }
