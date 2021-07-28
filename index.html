@@ -293,7 +293,6 @@ let handlePointer = (pointerX, pointerY) => {
             let install = async () => {
                 deferredPrompt.prompt();
                 let { outcome } = await deferredPrompt.userChoice;
-                sep = outcome;
                 deferredPrompt = undefined;
             }
             install();
