@@ -272,24 +272,24 @@ let gameover = false;
 
 let handlePointer = (pointerX, pointerY) => {
     let x = 0;
-    let y = h - u;
-    if (!(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u)) {
+    let y = h - u * 1.5;
+    if (!(pointerX < x || pointerY < y || pointerX > x + u * 1.5 || pointerY > y + u * 1.5)) {
         //muted = !muted;
         //beep();
         console.log('click bottom left');
         return;
     }
-    x = w - u;
+    x = w - u * 1.5;
     y = 0;
-    if (!(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u)) {
+    if (!(pointerX < x || pointerY < y || pointerX > x + u * 1.5 || pointerY > y + u * 1.5)) {
         muted = !muted;
         beep();
         return;
     }
     if (deferredPrompt !== undefined) {
-        x = w - u;
-        y = h - u;
-        if (!(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u)) {
+        x = w - u * 1.5;
+        y = h - u * 1.5;
+        if (!(pointerX < x || pointerY < y || pointerX > x + u * 1.5 || pointerY > y + u * 1.5)) {
             let install = async () => {
                 deferredPrompt.prompt();
                 let { outcome } = await deferredPrompt.userChoice;
