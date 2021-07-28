@@ -225,6 +225,18 @@ let onF = time => {
     ctx.fillStyle = '#F4ECD6';
     ctx.fill(p);
     ctx.restore();
+    // installbutton
+    if (deferredPrompt !== undefined) {
+        ctx.save();
+        svgPath = 'M8 29v10a1 1 0 001 1h30a1 1 0 001-1V29a1 1 0 00-1-1h-2a1 1 0 00-1 1v7H12v-7a1 1 0 00-1-1H9a1 1 0 00-1 1zm14-3.071l-2.861-2.861c-.4-.4-1.05-.4-1.45 0l-1.45 1.45c-.4.4-.4 1.049 0 1.449l7.036 7.036c.4.4 1.05.4 1.45 0l1.449-1.45.015-.014 5.571-5.572c.4-.4.4-1.049 0-1.449l-1.449-1.45c-.4-.4-1.05-.4-1.45 0L26 25.929V9a1 1 0 00-1-1h-2a1 1 0 00-1 1v16.929z';
+        p = new Path2D(svgPath);
+        ctx.translate(w, h);
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        ctx.translate(-48, -48);
+        ctx.fillStyle = '#F4ECD6';
+        ctx.fill(p);
+        ctx.restore();
+    }
 
     // request next frame
     requestAnimationFrame(onF);
@@ -272,6 +284,15 @@ let handlePointer = (pointerX, pointerY) => {
         muted = !muted;
         beep();
         return;
+    }
+    if (deferredPrompt !== undefined) {
+        x = w - u;
+        y = h - u;
+        if (!(pointerX < x || pointerY < y || pointerX > x + u || pointerY > y + u)) {
+            deferredPrompt.prompt();
+            deferredPrompt = undefined;
+            return;
+        }
     }
     if (gameover) {
         gameover = false;
@@ -592,6 +613,12 @@ let easeOutBounce = x => {
         return n1 * (x -= 2.625 / d1) * x + 0.984375;
     }
 }
+
+let deferredPrompt = undefined;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+});
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', e => {
