@@ -1,12 +1,12 @@
 {
-  "name": "Puzzle 6",
-  "short_name": "Puzzle 6",
+  "name": "Five Boring Shapes",
+  "short_name": "FBS",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#5C9996",
   "theme_color": "#5C9996",
   "scope": "./",
-  "description": "Minimalistic puzzle game",
+  "description": "Minimalistic match game",
   "icons": [
     {
       "src": "../apple-touch-icon.png",

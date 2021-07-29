@@ -1,4 +1,4 @@
-const PRECACHE = 'puzzle-6';
+const PRECACHE = 'five-boring-shapes';
 const PRECACHE_URLS = [
     './',
     'index.html'
