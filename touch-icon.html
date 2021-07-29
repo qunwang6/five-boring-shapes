@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html, body { height: 100%; position: relative; background: black; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        canvas { position: relative; display: block; }
+    </style>
+</head>
+<body>
+<script>
+
+let canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+
+// the 2d drawing api
+let ctx = canvas.getContext('2d');
+//console.log(ctx);
+
+let w = 1024;
+let h = 1024;
+let resizeTOID = 0;
+let onR = e => {
+    clearTimeout(resizeTOID);
+    resizeTOID = setTimeout(_ => {
+        canvas.width = w;
+        canvas.height = h;
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerWidth * h / w + 'px';
+    }, 40);
+};
+onR();
+window.addEventListener('resize', onR);
+
+// init
+let u = 48 * window.devicePixelRatio;
+let shapes = [
+    time => {
+        let v = u - 8 * window.devicePixelRatio;
+        ctx.beginPath();
+        ctx.arc(0, 0, v / 2, 0, 2 * Math.PI);
+        ctx.fill();
+    },
+    time => {
+        let v = u - 8 * window.devicePixelRatio;
+        let z = Math.sqrt(v * v - (v/2)*(v/2));
+        ctx.beginPath();
+        ctx.moveTo(-v/2, z/2);
+        ctx.lineTo(v/2, z/2);
+        ctx.lineTo(0, -z/2);
+        ctx.closePath();
+        ctx.fill();
+    },
+    time => {
+        ctx.rotate(Math.PI / 4);
+        let v = Math.hypot(u / 2, u / 2) - 4 * window.devicePixelRatio;
+        ctx.fillRect(-v / 2, - v / 2, v, v);
+        ctx.fillStyle = '#5C9996';
+        v = v / 2;
+        ctx.fillRect(-v / 2, - v / 2, v, v);
+    },
+    time => {
+        let v = u - 8 * window.devicePixelRatio;
+        let size = v / 2;
+        ctx.beginPath();
+        ctx.moveTo(size * Math.cos(- Math.PI / 2), size * Math.sin(- Math.PI / 2));
+        for (let side = 0; side < 5; side++) {
+            ctx.lineTo(
+                size * Math.cos(side * 2 * Math.PI / 5 - Math.PI / 2),
+                size * Math.sin(side * 2 * Math.PI / 5 - Math.PI / 2)
+            );
+        }
+        ctx.fill();
+    },
+    time => {
+        let v = u - 8 * window.devicePixelRatio;
+        let size = v / 2;
+        ctx.beginPath();
+        ctx.moveTo(size * Math.cos(0), size * Math.sin(0));
+        for (let side = 0; side < 6; side++) {
+            ctx.lineTo(
+                size * Math.cos(side * 2 * Math.PI / 6),
+                size * Math.sin(side * 2 * Math.PI / 6)
+            );
+        }
+        ctx.fill();
+        ctx.fillStyle = '#5C9996';
+        size = size / 2;
+        ctx.beginPath();
+        ctx.moveTo(size * Math.cos(0), size * Math.sin(0));
+        for (let side = 0; side < 6; side++) {
+            ctx.lineTo(
+                size * Math.cos(side * 2 * Math.PI / 6),
+                size * Math.sin(side * 2 * Math.PI / 6)
+            );
+        }
+        ctx.fill();
+    }
+];
+
+let gridWidth = 6;
+let gridHeight = 6;
+
+let blocks = [];
+
+let resetBlocks = _ => {
+
+    blocks = [];
+
+    let shape = Math.floor(
+        Math.random() * shapes.length
+    );
+
+    while (blocks.length < gridWidth * gridHeight) {
+        let x = blocks.length % gridWidth;
+        let y = blocks.length / gridWidth | 0;
+        if (Math.random() > .5) {
+            shape = Math.floor(
+                Math.random() * shapes.length
+            );
+        }
+        let oldY = y;
+        let startAni = false;
+        let endTime = 0;
+        let frozen = false;
+        let block = { x, y, oldY, startAni, endTime, shape, frozen };
+        blocks.push(block);
+    }
+};
+
+if (blocks.length === 0) {
+    resetBlocks();
+}
+
+// animation loop
+let onF = time => {
+
+    // clear canvas
+    ctx.save();
+    ctx.fillStyle = '#5C9996';
+    ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+
+    // draw blocks
+    blocks.forEach(block => {
+        if (block === undefined) {
+            return;
+        }
+        ctx.save();
+        let y = block.y;
+        if (block.startAni) {
+            block.startAni = false;
+            block.endTime = time + 750;
+        }
+        if (block.endTime > time) {
+            y = block.oldY + (block.y - block.oldY) * easeOutBounce(1 + (time - block.endTime) / 750);
+        } else {
+            block.oldY = y;
+        }
+
+        ctx.translate(
+           w/2 - gridWidth*u/2 + u/2 + block.x*u,
+           h/2 - gridHeight*u/2 + u/2 + y*u,
+        );
+        ctx.fillStyle = (block.frozen) ? '#9AC1C0' : '#F4ECD6';
+        shapes[block.shape](time);
+        ctx.restore();
+    });
+
+    // request next frame
+    //requestAnimationFrame(onF);
+};
+setTimeout(onF, 50, 0);
+
+</script>
+</body>
+</html>
