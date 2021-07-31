@@ -111,18 +111,12 @@ let resetBlocks = _ => {
 
     blocks = [];
 
-    let shape = Math.floor(
-        Math.random() * shapes.length
-    );
+    let shape = -1;
 
-    while (blocks.length < gridWidth * gridHeight) {
+    while (blocks.length < 5) {
         let x = blocks.length % gridWidth;
         let y = blocks.length / gridWidth | 0;
-        if (Math.random() > .5) {
-            shape = Math.floor(
-                Math.random() * shapes.length
-            );
-        }
+        shape = shape + 1;
         let oldY = y;
         let startAni = false;
         let endTime = 0;
