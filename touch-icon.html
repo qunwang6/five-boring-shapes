@@ -145,20 +145,10 @@ let onF = time => {
             return;
         }
         ctx.save();
-        let y = block.y;
-        if (block.startAni) {
-            block.startAni = false;
-            block.endTime = time + 750;
-        }
-        if (block.endTime > time) {
-            y = block.oldY + (block.y - block.oldY) * easeOutBounce(1 + (time - block.endTime) / 750);
-        } else {
-            block.oldY = y;
-        }
 
         ctx.translate(
-           w/2 - gridWidth*u/2 + u/2 + block.x*u,
-           h/2 - gridHeight*u/2 + u/2 + y*u,
+           w/2 + block.x*u,
+           h/2 + block.y*u
         );
         ctx.fillStyle = (block.frozen) ? '#9AC1C0' : '#F4ECD6';
         shapes[block.shape](time);
