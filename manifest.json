@@ -9,7 +9,7 @@
   "description": "Minimalistic match game",
   "icons": [
     {
-      "src": "../apple-touch-icon.png",
+      "src": "./apple-touch-icon.png",
       "type": "image/png",
       "sizes": "1024x1024",
       "purpose": "any maskable"

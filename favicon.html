@@ -21,8 +21,8 @@ document.body.appendChild(canvas);
 let ctx = canvas.getContext('2d');
 //console.log(ctx);
 
-let w = 1024;
-let h = 1024;
+let w = 32;
+let h = 32;
 let resizeTOID = 0;
 let onR = e => {
     clearTimeout(resizeTOID);
@@ -37,7 +37,7 @@ onR();
 window.addEventListener('resize', onR);
 
 // init
-let u = 512;
+let u = 16;
 let shapes = [
     time => {
         let v = u - 8 * window.devicePixelRatio;
@@ -156,6 +156,8 @@ let onF = time => {
         shapes[block.shape](time);
         ctx.restore();
     });
+
+    console.log(canvas.toDataURL());
 
     // request next frame
     //requestAnimationFrame(onF);
