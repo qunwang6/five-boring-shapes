@@ -37,7 +37,7 @@ onR();
 window.addEventListener('resize', onR);
 
 // init
-let u = 48 * window.devicePixelRatio;
+let u = 224;
 let shapes = [
     time => {
         let v = u - 8 * window.devicePixelRatio;
@@ -114,13 +114,13 @@ let resetBlocks = _ => {
     let shape = -1;
 
     while (blocks.length < 5) {
-        let x = blocks.length % gridWidth;
-        let y = blocks.length / gridWidth | 0;
+        let x = u * Math.cos(blocks.length * 2 * Math.PI / 5 + Math.PI * 3 / 2);
+        let y = u * Math.sin(blocks.length * 2 * Math.PI / 5 + Math.PI * 3 / 2);
         shape = shape + 1;
         let oldY = y;
         let startAni = false;
         let endTime = 0;
-        let frozen = false;
+        let frozen = blocks.length === 0 || blocks.length === 2;
         let block = { x, y, oldY, startAni, endTime, shape, frozen };
         blocks.push(block);
     }
@@ -147,8 +147,8 @@ let onF = time => {
         ctx.save();
 
         ctx.translate(
-           w/2 + block.x*u,
-           h/2 + block.y*u
+           w/2 + block.x,
+           h/2 + block.y
         );
         ctx.fillStyle = (block.frozen) ? '#9AC1C0' : '#F4ECD6';
         shapes[block.shape](time);
