@@ -497,8 +497,8 @@ let playSong = (options = {}) => {
         bass = shuffleArray(bass);
     }
 
-    let mLooped = false;
-    let bLooped = false;
+    let mLooped = !melody;
+    let bLooped = !bass;
 
     let ctx = new AudioContext();
 
@@ -536,46 +536,50 @@ let playSong = (options = {}) => {
 
     let anticipate = 60 / bpm * 7;
 
+    let stopTime = 0;
+
     let scheduleNotes = () => {
         if (ctx.state === 'closed') {
             return;
         }
-        if (ctx.currentTime > nextNoteTick + 1 || ctx.currentTime > nextPluckTick + 1) {
-            if (loop || (bass && !bLooped) || (melody && !mLooped)) {
-                nextNote = 0;
-                nextPluck = 0;
-                nextNoteTick = nextPluckTick = ctx.currentTime;
-            } else if (ctx.currentTime > anticipate * 2) {
-                ctx.close();
-            }
+        if (stopTime !== 0 && ctx.currentTime > stopTime) {
+            ctx.close();
+            return;
         }
-        if (melody && (loop || !mLooped)) {
-            if (ctx.currentTime > nextNoteTick - anticipate) {
-                let noteLength = playNote(noteNodes[index], melody[nextNote], nextNoteTick, bpm, 'square');
-                index = (index + 1) % noteNodes.length;
-                nextNote = (nextNote + 1) % melody.length;
-                nextNoteTick += noteLength;
-                if (nextNote === 0) {
-                    if (shuffle) {
-                        melody = shuffleArray(melody);
-                    }
+        if ((!mLooped && ctx.currentTime > nextNoteTick + 1) || (!bLooped && ctx.currentTime > nextPluckTick + 1)) {
+            nextNote = 0;
+            nextPluck = 0;
+            nextNoteTick = nextPluckTick = ctx.currentTime;
+        }
+        while (!mLooped && nextNoteTick < ctx.currentTime + anticipate) {
+            let noteLength = playNote(noteNodes[index], melody[nextNote], nextNoteTick, bpm, 'square');
+            index = (index + 1) % noteNodes.length;
+            nextNote = (nextNote + 1) % melody.length;
+            nextNoteTick += noteLength;
+            if (nextNote === 0) {
+                if (shuffle) {
+                    melody = shuffleArray(melody);
+                }
+                if (!loop) {
                     mLooped = true;
                 }
             }
+            stopTime = (stopTime < nextNoteTick + anticipate) ? nextNoteTick + anticipate : stopTime;
         }
-        if (bass && (loop || !bLooped)) {
-            if (ctx.currentTime > nextPluckTick - anticipate) {
-                let pluckLength = playNote(noteNodes[index], bass[nextPluck], nextPluckTick, bpm, 'triangle');
-                index = (index + 1) % noteNodes.length;
-                nextPluck = (nextPluck + 1) % bass.length;
-                nextPluckTick += pluckLength;
-                if (nextPluck === 0) {
-                    if (shuffle) {
-                        bass = shuffleArray(bass);
-                    }
+        while (!bLooped && nextPluckTick < ctx.currentTime + anticipate) {
+            let pluckLength = playNote(noteNodes[index], bass[nextPluck], nextPluckTick, bpm, 'triangle');
+            index = (index + 1) % noteNodes.length;
+            nextPluck = (nextPluck + 1) % bass.length;
+            nextPluckTick += pluckLength;
+            if (nextPluck === 0) {
+                if (shuffle) {
+                    bass = shuffleArray(bass);
+                }
+                if (!loop) {
                     bLooped = true;
                 }
             }
+            stopTime = (stopTime < nextPluckTick + anticipate) ? nextPluckTick + anticipate : stopTime;
         }
         requestAnimationFrame(scheduleNotes);
     };
