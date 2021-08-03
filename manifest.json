@@ -6,7 +6,7 @@
   "background_color": "#5C9996",
   "theme_color": "#5C9996",
   "scope": "./",
-  "description": "Minimalistic match game",
+  "description": "Slow one-screen match game",
   "icons": [
     {
       "src": "./apple-touch-icon.png",
