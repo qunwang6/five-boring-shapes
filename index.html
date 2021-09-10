@@ -34,7 +34,13 @@ let ctx = canvas.getContext('2d');
 // resize canvas with window
 let w = 0;
 let h = 0;
-let onR = e => {
+let onR = _ => {
+    if (
+        w === window.innerWidth * window.devicePixelRatio
+        && h === window.innerHeight * window.devicePixelRatio 
+    ) {
+        return;
+    }
     canvas.style.width = window.innerWidth + 'px';
     canvas.style.height = window.innerHeight + 'px';
     w = window.innerWidth * window.devicePixelRatio;
@@ -42,8 +48,6 @@ let onR = e => {
     canvas.width = w;
     canvas.height = h;
 };
-onR();
-window.addEventListener('resize', onR);
 
 // init
 let u = 48 * window.devicePixelRatio;
@@ -161,6 +165,8 @@ let muted = true;
 
 // animation loop
 let onF = time => {
+
+    onR();
 
     // clear canvas
     ctx.save();
