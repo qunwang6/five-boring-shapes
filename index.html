@@ -13,9 +13,8 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        html, body { height: 100%; position: relative; overflow: hidden; background: #5C9996; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        canvas { position: relative; display: block; }
+        body { background: #5C9996; margin: 0; }
+        canvas { display: block; }
     </style>
 </head>
 <body>
@@ -39,10 +38,10 @@ let resizeTOID = 0;
 let onR = e => {
     clearTimeout(resizeTOID);
     resizeTOID = setTimeout(_ => {
-        canvas.width = w = window.innerWidth * window.devicePixelRatio;
-        canvas.height = h = window.innerHeight * window.devicePixelRatio;
         canvas.style.width = window.innerWidth + 'px';
         canvas.style.height = window.innerHeight + 'px';
+        canvas.width = w = window.innerWidth * window.devicePixelRatio;
+        canvas.height = h = window.innerHeight * window.devicePixelRatio;
     }, 40);
 };
 onR();
