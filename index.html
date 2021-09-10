@@ -32,17 +32,15 @@ let ctx = canvas.getContext('2d');
 //console.log(ctx);
 
 // resize canvas with window
-let w = 320;
-let h = 320;
-let resizeTOID = 0;
+let w = 0;
+let h = 0;
 let onR = e => {
-    clearTimeout(resizeTOID);
-    resizeTOID = setTimeout(_ => {
-        canvas.style.width = window.innerWidth + 'px';
-        canvas.style.height = window.innerHeight + 'px';
-        canvas.width = w = window.innerWidth * window.devicePixelRatio;
-        canvas.height = h = window.innerHeight * window.devicePixelRatio;
-    }, 40);
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    w = window.innerWidth * window.devicePixelRatio;
+    h = window.innerHeight * window.devicePixelRatio;
+    canvas.width = w;
+    canvas.height = h;
 };
 onR();
 window.addEventListener('resize', onR);
