@@ -18,14 +18,12 @@
     </style>
 </head>
 <body>
+<canvas id="canvas"></canvas>
 <script>
 
 let score = Number(localStorage.getItem('five-boring-shapes-score'));
 let hiscore = Number(localStorage.getItem('five-boring-shapes-hiscore'));
 let sep = ' | ';
-
-let canvas = document.createElement('canvas');
-document.body.appendChild(canvas);
 
 // the 2d drawing api
 let ctx = canvas.getContext('2d');
@@ -257,7 +255,6 @@ let onF = time => {
     // request next frame
     requestAnimationFrame(onF);
 };
-setTimeout(onF, 50, 0);
 
 // pointer events
 // mousedown | mousemove | mouseup
@@ -651,6 +648,9 @@ if ('serviceWorker' in navigator) {
         });
     });
 }
+
+// start ani loop
+onF();
 
 </script>
 </body>
