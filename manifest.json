@@ -3,8 +3,10 @@
   "short_name": "FBS",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#5C9996",
-  "theme_color": "#5C9996",
+  // "background_color": "#5C9996",
+  // "theme_color": "#5C9996",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "scope": "./",
   "description": "Slow one-screen match game",
   "icons": [
